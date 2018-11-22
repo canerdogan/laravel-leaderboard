@@ -1,0 +1,18 @@
+language: php
+dist: trusty
+
+php:
+  - 7.2
+  - 7.1
+  - hhvm
+
+sudo: false
+
+install: composer install --no-interaction
+
+script: composer test
+
+after_success:
+  - vendor/bin/test-reporter
+
+  
