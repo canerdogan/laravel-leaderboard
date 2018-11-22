@@ -154,7 +154,7 @@ class RedisEndpoint
 	{
 
 		Log::info( 'Inserting score: scoreId=' . $scoreid . ', userId=' . $userid . ', featureId=' . $featureid
-		           . ', date=' . $date . ', rawScore=' . $rawScore . ', scoreData=' . $scoreData );
+		           . ', date=' . $date . ', rawScore=' . $rawScore . ', scoreData=' . print_r($scoreData, TRUE) );
 
 		$resp = Redis::connection()->hmset( self::key_score . $scoreid,
 		                                    self::field_userId, $userid,
