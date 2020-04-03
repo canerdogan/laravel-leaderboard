@@ -1,7 +1,7 @@
 # Leaderboard inside your Laravel app
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-activitylog.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-activitylog)
-[![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-activitylog.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-activitylog)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/canerdogan/laravel-leaderboard.svg?style=flat-square)](https://packagist.org/packages/canerdogan/laravel-leaderboard)
+[![Total Downloads](https://img.shields.io/packagist/dt/canerdogan/laravel-leaderboard.svg?style=flat-square)](https://packagist.org/packages/canerdogan/laravel-leaderboard)
 
 A Laravel leaderboard module that besides the all-time leaderboard supports also periodic leaderboards: daily, weekly, monthly options backed by [Redis](http://redis.io).
 
@@ -99,7 +99,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Support us
 
-Does your business depend on our contributions? Reach out and support us on [Patreon](https://www.patreon.com/spatie). 
+Does your business depend on our contributions? Reach out and support us on [Buy Me a Coffee](https://buymeacoff.ee/canerdogan). 
 All pledges will be dedicated to allocating workforce on maintenance and new awesome stuff.
 
 ## License
