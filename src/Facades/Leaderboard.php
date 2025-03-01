@@ -5,15 +5,13 @@ use Illuminate\Support\Facades\Facade;
 
 class Leaderboard extends Facade
 {
-
-	/**
-	 * Get a schema builder instance for the default connection.
-	 *
-	 * @return \Rollbar\Laravel\RollbarLogHandler
-	 */
-	protected static function getFacadeAccessor ()
-	{
-
-		return LeaderboardHandler::class;
-	}
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor()
+    {
+        return LeaderboardHandler::class;
+    }
 }

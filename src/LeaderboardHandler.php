@@ -1,6 +1,6 @@
 <?php namespace CanErdogan\Leaderboard;
 
-use Illuminate\Foundation\Application;
+use Illuminate\Contracts\Foundation\Application;
 use Carbon\Carbon;
 
 class LeaderboardHandler
@@ -19,14 +19,14 @@ class LeaderboardHandler
 	/**
 	 * The Laravel application.
 	 *
-	 * @var \Illuminate\Foundation\Application
+	 * @var \Illuminate\Contracts\Foundation\Application
 	 */
 	protected $app;
 
 
 	public function __construct (Application $app)
 	{
-
+		$this->app = $app;
 		$this->redisClient = new RedisEndpoint();
 	}
 
