@@ -28,59 +28,23 @@ composer require canerdogan/laravel-leaderboard
 
 The package will automatically register itself.
 
+## Requirements
 
-You can optionally publish the config file with:
-```bash
-php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="config"
+- PHP 8.0 or higher
+- Laravel 4.0 - 11.x
+- Redis server
+
+## Configuration
+
+This package requires Redis to be configured in your Laravel application. Make sure you have the Redis connection properly set up in your `.env` file:
+
+```env
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
 ```
 
-This is the contents of the published config file:
-
-```php
-return [
-
-    /*
-     * If set to false, no activities will be saved to the database.
-     */
-    'enabled' => env('ACTIVITY_LOGGER_ENABLED', true),
-
-    /*
-     * When the clean-command is executed, all recording activities older than
-     * the number of days specified here will be deleted.
-     */
-    'delete_records_older_than_days' => 365,
-
-    /*
-     * If no log name is passed to the activity() helper
-     * we use this default log name.
-     */
-    'default_log_name' => 'default',
-
-    /*
-     * You can specify an auth driver here that gets user models.
-     * If this is null we'll use the default Laravel auth driver.
-     */
-    'default_auth_driver' => null,
-
-    /*
-     * If set to true, the subject returns soft deleted models.
-     */
-    'subject_returns_soft_deleted_models' => false,
-
-    /*
-     * This model will be used to log activity. The only requirement is that
-     * it should be or extend the Spatie\Activitylog\Models\Activity model.
-     */
-    'activity_model' => \Spatie\Activitylog\Models\Activity::class,
-    
-    /*
-     * This is the name of the table that will be created by the migration and
-     * used by the Activity model shipped with this package.
-     */
-    'table_name' => 'activity_log',
-];
-
-```
+The package will use the default Redis connection configured in your Laravel application.
 
 ## Usage
 
