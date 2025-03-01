@@ -41,12 +41,13 @@
     },
     "scripts": {
         "test": [
-            "@phpunit",
+            "@pest",
             "@phpcs"
         ],
         "fix": "phpcbf --standard=PSR1,PSR2 src tests",
         "phpunit": "phpunit --coverage-clover build/logs/clover.xml",
-        "phpcs": "phpcs --standard=PSR1,PSR2 src tests"
+        "phpcs": "phpcs --standard=PSR1,PSR2 src tests",
+        "pest": "pest --colors=always"
     },
     "extra": {
         "laravel": {
