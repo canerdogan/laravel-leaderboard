@@ -8,7 +8,7 @@ class LeaderboardServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application events.
      */
-    public function boot()
+    public function boot(): void
     {
         // Bootstrap code if needed
     }
@@ -16,9 +16,9 @@ class LeaderboardServiceProvider extends ServiceProvider
     /**
      * Register the service provider.
      */
-    public function register()
+    public function register(): void
     {
-        $this->app->singleton('CanErdogan\Leaderboard\LeaderboardHandler', function($app) {
+        $this->app->singleton(LeaderboardHandler::class, function($app) {
             return new LeaderboardHandler($app);
         });
 
@@ -28,5 +28,15 @@ class LeaderboardServiceProvider extends ServiceProvider
         });
 
         $this->app->make('CanErdogan\Leaderboard\Console\Kernel');
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array<string>
+     */
+    public function provides(): array
+    {
+        return [LeaderboardHandler::class];
     }
 }

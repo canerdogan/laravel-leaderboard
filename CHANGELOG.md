@@ -1,22 +1,26 @@
 # Changelog
 
-All notable changes to `canerdogan/laravel-leaderboard` will be documented in this file
+All notable changes to `laravel-leaderboard` will be documented in this file.
 
 ## 2.0.0 - 2023-XX-XX
 
 ### Added
-- Support for Laravel 11+
-- Support for PHP 8.0+
+- Support for Laravel 10, 11, and 12
+- Standalone usage example
+- Laravel controller example
+- Return type declarations for better type safety
+- Improved documentation
 
 ### Changed
-- Updated dependencies to be compatible with newer Laravel versions
-- Improved service provider implementation
-- Fixed ClearLeaderboard command implementation
-- Updated facade docblock
+- Updated PHP requirement to 8.1+
+- Removed support for older Laravel versions (pre-10.0)
+- Updated dependencies to be compatible with Laravel 10, 11, and 12
+- Improved method signatures with proper type hints
+- Code quality improvements
 
-### Removed
-- Dropped support for PHP 7.x
-- Removed deprecated $defer property from service provider
+### Fixed
+- Fixed potential issues with null values in RedisEndpoint
+- Fixed parameter type checking in LeaderboardHandler
 
 ## 1.0.0 - 2018-10-18
 
