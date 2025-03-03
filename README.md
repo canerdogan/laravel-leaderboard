@@ -1,246 +1,156 @@
-# Leaderboard inside your Laravel app
+# Laravel Leaderboard
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/canerdogan/laravel-leaderboard.svg?style=flat-square)](https://packagist.org/packages/canerdogan/laravel-leaderboard)
 [![Total Downloads](https://img.shields.io/packagist/dt/canerdogan/laravel-leaderboard.svg?style=flat-square)](https://packagist.org/packages/canerdogan/laravel-leaderboard)
 
-A Laravel leaderboard module that besides the all-time leaderboard supports also periodic leaderboards: daily, weekly, monthly options backed by [Redis](http://redis.io).
+Laravel leaderboard module that supports both all-time leaderboards and periodic leaderboards (daily, weekly, monthly) backed by Redis.
 
-Here's a demo of how you can use it:
+## Requirements
 
-
-## Documentation
-
-For detailed documentation on how to use the package, please see the [Usage](#usage) section below.
-
-For information about how the package works internally, please see the [HOW_IT_WORKS.md](HOW_IT_WORKS.md) file.
-
-Find yourself stuck using the package? Found a bug? Do you have general questions or suggestions for improving the activity log? Feel free to [create an issue on GitHub](https://github.com/canerdogan/laravel-leaderboard/issues), we'll try to address it as soon as possible.
-
-
+- PHP 8.1 or higher
+- Laravel 10.x, 11.x, or 12.x
+- Redis server
 
 ## Installation
 
 You can install the package via composer:
 
-``` bash
+```bash
 composer require canerdogan/laravel-leaderboard
 ```
 
-The package will automatically register itself.
-
-## Requirements
-
-- PHP 8.0 or higher
-- Laravel 4.0 - 11.x
-- Redis server
+The package will automatically register its service provider.
 
 ## Configuration
 
-This package requires Redis to be configured in your Laravel application. Make sure you have the Redis connection properly set up in your `.env` file:
+This package requires Redis to be configured in your Laravel application. Make sure you have the Redis configuration set up in your `config/database.php` file:
 
-```env
-REDIS_HOST=127.0.0.1
-REDIS_PASSWORD=null
-REDIS_PORT=6379
+```php
+'redis' => [
+    'client' => env('REDIS_CLIENT', 'predis'),
+    'default' => [
+        'host' => env('REDIS_HOST', '127.0.0.1'),
+        'password' => env('REDIS_PASSWORD', null),
+        'port' => env('REDIS_PORT', 6379),
+        'database' => env('REDIS_DB', 0),
+    ],
+],
 ```
-
-The package will use the default Redis connection configured in your Laravel application.
 
 ## Usage
 
-After installing the package, you can use the Leaderboard facade to interact with the leaderboard functionality.
-
-### Configuration
-
-First, you need to make sure Redis is properly configured in your Laravel application. The package uses the default Redis connection.
-
-### Enabling Periodic Leaderboards
-
-By default, only the all-time leaderboard is enabled. To enable periodic leaderboards (daily, weekly, monthly), you need to call the `addLeaderboards` method:
+### Basic Usage
 
 ```php
 use CanErdogan\Leaderboard\Facades\Leaderboard;
 
-// Enable daily leaderboard
-Leaderboard::addLeaderboards(['daily' => true]);
-
-// Enable weekly leaderboard
-Leaderboard::addLeaderboards(['weekly' => true]);
-
-// Enable monthly leaderboard
-Leaderboard::addLeaderboards(['monthly' => true]);
-
-// Enable all periodic leaderboards
-Leaderboard::addLeaderboards([
-    'daily' => true,
-    'weekly' => true,
-    'monthly' => true
-]);
-```
-
-### Inserting Scores
-
-To insert a new score for a user:
-
-```php
-use CanErdogan\Leaderboard\Facades\Leaderboard;
-
-// Basic score insertion
-Leaderboard::insertScore('user123', 100);
-
-// With feature ID
+// Insert a score for a user
 Leaderboard::insertScore('user123', 100, [
-    'featureId' => 'game_level_1'
-]);
-
-// With additional score data
-Leaderboard::insertScore('user123', 100, [
-    'featureId' => 'game_level_1',
+    'featureId' => 'game1',
     'scoreData' => [
-        'timeTaken' => 45,
-        'livesLeft' => 2
+        'level' => 5,
+        'time' => 120,
+        'bonus' => 20
     ]
 ]);
-```
 
-### Retrieving Leaderboards
-
-To get a leaderboard:
-
-```php
-// Get all-time leaderboard
-$leaderboard = Leaderboard::getLeaderboard();
-
-// Get daily leaderboard
-$dailyLeaderboard = Leaderboard::getLeaderboard([
-    'leaderboard' => 'daily'
-]);
-
-// Get leaderboard for a specific feature
-$featureLeaderboard = Leaderboard::getLeaderboard([
-    'featureId' => 'game_level_1'
-]);
-
-// Get a specific range of the leaderboard
-$topTen = Leaderboard::getLeaderboard([
+// Get the all-time leaderboard
+$leaders = Leaderboard::getLeaderboard([
+    'featureId' => 'game1',
     'fromRank' => 0,
-    'toRank' => 9
-]);
-```
-
-### Getting a User's Rank
-
-To get a user's rank in a leaderboard:
-
-```php
-// Get rank in all-time leaderboard
-$rank = Leaderboard::getRank('user123');
-
-// Get rank in daily leaderboard
-$dailyRank = Leaderboard::getRank('user123', [
-    'leaderboard' => 'daily'
+    'toRank' => 9 // Top 10 players
 ]);
 
-// Get rank for a specific feature
-$featureRank = Leaderboard::getRank('user123', [
-    'featureId' => 'game_level_1'
-]);
-```
-
-### Getting a User's Best Score
-
-To get a user's best score:
-
-```php
-// Get best score from all-time leaderboard
-$bestScore = Leaderboard::getUserBestScore('user123');
-
-// Get best score from daily leaderboard
-$dailyBestScore = Leaderboard::getUserBestScore('user123', [
-    'leaderboard' => 'daily'
-]);
-
-// Get best score for a specific feature
-$featureBestScore = Leaderboard::getUserBestScore('user123', [
-    'featureId' => 'game_level_1'
-]);
-
-// Get best score with additional data
-$bestScoreWithData = Leaderboard::getUserBestScore('user123', [
-    'featureId' => 'game_level_1'
+// Get a user's best score
+$score = Leaderboard::getUserBestScore('user123', [
+    'featureId' => 'game1'
 ], [
     'rawscore' => true,
     'scoreData' => true,
     'date' => true
 ]);
+
+// Get a user's rank
+$rank = Leaderboard::getRank('user123', [
+    'featureId' => 'game1'
+]);
+
+// Get leaderboard around a specific user
+$aroundMe = Leaderboard::getAroundMeLeaderboard('user123', [
+    'featureId' => 'game1',
+    'range' => 5 // 5 players above and below
+]);
 ```
 
-### Getting Leaderboard Around a User
+### Periodic Leaderboards
 
-To get a portion of the leaderboard centered around a specific user:
+The package supports daily, weekly, and monthly leaderboards. You need to enable them first:
 
 ```php
-// Get 10 users around the specified user
-$aroundMe = Leaderboard::getAroundMeLeaderboard('user123', [
-    'range' => 5 // 5 users above and 5 users below
+// Enable periodic leaderboards
+Leaderboard::addLeaderboards([
+    'daily' => true,
+    'weekly' => true,
+    'monthly' => true
 ]);
 
-// For a specific feature
-$aroundMeFeature = Leaderboard::getAroundMeLeaderboard('user123', [
-    'featureId' => 'game_level_1',
-    'range' => 5
-]);
-
-// For a specific leaderboard period
-$aroundMeDaily = Leaderboard::getAroundMeLeaderboard('user123', [
+// Get the daily leaderboard
+$dailyLeaders = Leaderboard::getLeaderboard([
     'leaderboard' => 'daily',
-    'range' => 5
+    'featureId' => 'game1',
+    'fromRank' => 0,
+    'toRank' => 9
+]);
+
+// Get the weekly leaderboard
+$weeklyLeaders = Leaderboard::getLeaderboard([
+    'leaderboard' => 'weekly',
+    'featureId' => 'game1',
+    'fromRank' => 0,
+    'toRank' => 9
+]);
+
+// Get the monthly leaderboard
+$monthlyLeaders = Leaderboard::getLeaderboard([
+    'leaderboard' => 'monthly',
+    'featureId' => 'game1',
+    'fromRank' => 0,
+    'toRank' => 9
 ]);
 ```
 
 ### Clearing Leaderboards
 
-To clear all leaderboards:
+You can clear the leaderboards using the provided command:
 
-```php
-Leaderboard::flushAll();
+```bash
+php artisan leaderboard:clear
 ```
 
-To remove specific periodic leaderboards:
+Or programmatically:
 
 ```php
-Leaderboard::removeLeaderboards([
-    'daily' => true,
-    'weekly' => true,
-    'monthly' => true
-]);
+use CanErdogan\Leaderboard\RedisEndpoint;
+
+$redisEndpoint = new RedisEndpoint();
+$redisEndpoint->clearPeriodicalLeaderboard('daily');
+$redisEndpoint->clearPeriodicalLeaderboard('weekly');
+$redisEndpoint->clearPeriodicalLeaderboard('monthly');
 ```
 
-For more detailed information about how the package works internally, please see the [HOW_IT_WORKS.md](HOW_IT_WORKS.md) file.
+### Standalone Usage
 
-## Changelog
+You can also use the package without a full Laravel application. See the example in `examples/standalone.php`.
 
-Please see [CHANGELOG](CHANGELOG.md) for more information about recent changes.
+### Laravel Controller Example
+
+For a complete example of how to use the package in a Laravel controller, see the example in `examples/laravel-usage.php`.
 
 ## Testing
 
-``` bash
-$ composer test
+```bash
+composer test
 ```
-
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-## Credits
-
-- [Can Erdogan](https://github.com/canerdogan)
-- [All Contributors](../../contributors)
-
-## Support us
-
-Does your business depend on our contributions? Reach out and support us on [Buy Me a Coffee](https://buymeacoff.ee/canerdogan). 
-All pledges will be dedicated to allocating workforce on maintenance and new awesome stuff.
 
 ## License
 
