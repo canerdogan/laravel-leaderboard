@@ -1,0 +1,52 @@
+name: Laravel Leaderboard Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [8.0, 8.1, 8.2]
+        laravel: [8.*, 9.*, 10.*, 11.*]
+        exclude:
+          - php: 8.0
+            laravel: 11.*
+          - php: 8.0
+            laravel: 10.*
+
+    name: P${{ matrix.php }} - L${{ matrix.laravel }}
+
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, redis
+          coverage: none
+
+      - name: Install dependencies
+        run: |
+          composer require "illuminate/support:${{ matrix.laravel }}" --no-interaction --no-update
+          composer update --prefer-dist --no-interaction
+
+      - name: Execute Pest tests
+        run: vendor/bin/pest --colors=always
+
+      - name: Check code style
+        run: vendor/bin/phpcs --standard=PSR1,PSR2 src tests
